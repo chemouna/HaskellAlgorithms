@@ -26,8 +26,17 @@ prop_quicksort_nn_max xs = not (null xs) ==> head (reverse (quickSort1 xs)) == m
 
 prop_quicksort_sort xs = quickSort1 xs == sort xs
 
+prop_quicksort_sort_fix xs = quickSort1 xs == nub (sort xs)
+
+
+isDistinct (x:xs) = not (x `elem` xs) && isDistinct xs
+isDistinct _      = True
+
+prop_qsort_distinct :: [Int] -> Bool
+prop_qsort_distinct = isDistinct . quickSort1
+
+prop_quicksort_sort_distinct xs = (isDistinct xs) ==> quickSort1 xs == sort xs
+
 
 return []
 main = $quickCheckAll
-
-
