@@ -9,7 +9,6 @@ import Data.List
 import Test.QuickCheck
 import Test.QuickCheck.All
 
-
 quickSort1 [] = []
 quickSort1 (x:xs) = quickSort1 [y | y <- xs, y < x] ++ [x] ++ quickSort1 [y | y <- xs, y > x]
 
@@ -28,15 +27,13 @@ prop_quicksort_sort xs = quickSort1 xs == sort xs
 
 prop_quicksort_sort_fix xs = quickSort1 xs == nub (sort xs)
 
-
 isDistinct (x:xs) = not (x `elem` xs) && isDistinct xs
 isDistinct _      = True
 
 prop_qsort_distinct :: [Int] -> Bool
 prop_qsort_distinct = isDistinct . quickSort1
 
-prop_quicksort_sort_distinct xs = (isDistinct xs) ==> quickSort1 xs == sort xs
-
+prop_quicksort_sort_distinct xs = isDistinct xs ==> quickSort1 xs == sort xs
 
 return []
 main = $quickCheckAll
