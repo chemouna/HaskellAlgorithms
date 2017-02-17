@@ -6,7 +6,6 @@ mergeSort [x] = [x]
 mergeSort xs = let (as, bs) = split xs
   in merge (mergeSort as) (mergeSort bs)
 
-
 merge :: (Ord a) => [a] -> [a] -> [a]
 merge [] xs = xs
 merge xs [] = xs
