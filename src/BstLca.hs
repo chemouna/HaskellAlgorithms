@@ -22,3 +22,14 @@ bstLca bst@(Node root left right) a b
   | root < a && root < b = bstLca left a b
   | otherwise =  bstLca right a b
 
+
+-- a more correct version that handles all cases
+bstLca2 :: Ord a => BST a -> a -> a -> Maybe (BST a)
+bstLca2 Nil _ _ = Nothing
+bstLca2 bst@(Node root left right) a b
+  | a < root && b < root = bstLca2 left a b
+  | a > root && b > root = bstLca2 right a b
+  | a == root = if bstContains bst b then Just bst else Nothing
+  | b == root = if bstContains bst a then Just bst else Nothing
+  | bstContains bst a && bstContains bst b = Just bst
+  | otherwise = Nothing
