@@ -19,3 +19,4 @@ main = do
    print $ map (`quickSelect` xs) [0 ..length xs - 1]
 
 
+
