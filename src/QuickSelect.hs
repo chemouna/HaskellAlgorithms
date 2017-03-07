@@ -3,10 +3,10 @@ module QuickSelect where
 
 import Data.List (partition)
 
-quickSelect :: Ord a => Int -> [a] -> a
+quickSelect :: Ord a => Int -> [a] -> Maybe a
 quickSelect k (x:xs) | k < l = quickSelect k ys
                      | k > l = quickSelect (k - l - 1) zs
-                     | otherwise = x
+                     | otherwise = Just x
          where (ys, zs) = partition (< x) xs
                l = length ys
 
@@ -16,6 +16,6 @@ quickSelect k (x:xs) | k < l = quickSelect k ys
 main :: IO ()
 main = do
    let xs = [9, 8, 7, 6, 5, 0, 1, 2, 3, 4]
-   print $ map (\i -> quickSelect i xs) [0 ..length xs - 1]
+   print $ map (`quickSelect` xs) [0 ..length xs - 1]
 
 
