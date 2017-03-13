@@ -1,26 +1,26 @@
 module InversionCounting where
 
 merge :: [Int] -> [Int] -> Int -> Int -> ([Int], Int, Int)
-merge left [] counter leftLength =  (left, counter, leftLength)
-merge [] right counter _ = (right, counter, 0)
-merge (l:ls) (r:rs) counter leftLength
-  | l <= r = (l:left, leftCount, leftLength')
-  | otherwise = (r:right, rightCount, leftLength'')
+merge left [] counter left_length       = (left, counter, left_length)
+merge [] right counter _      = (right, counter, 0)
+merge (l:ls) (r:rs) counter left_length
+  | l <= r = (l:left, left_count, left_length')
+  | otherwise = (r:right, right_count, left_length'')
   where
-    counter' = counter + leftLength
-    (left, leftCount, leftLength') = merge ls (r:rs) counter (leftLength - 1)
-    (right, rightCount, leftLength'') = merge (l:ls) rs counter' leftLength
+    counter' = counter + left_length
+    (left, left_count, left_length')    = merge ls (r:rs) counter (left_length - 1)
+    (right, right_count, left_length'') = merge (l:ls) rs counter' left_length
 
 
 inversionCount :: [Int] -> Int -> ([Int], Int)
-inversionCount [] _ = ([], 0)
-inversionCount [x] _ = ([x], 1)
-inversionCount xs len =
-  let (left, leftCount) = inversionCount leftList leftLength
-      (right, rightCount) = inversionCount rightList rightLength in
-      let (cross, crossCount, _) = merge left right (leftCount + rightCount) leftLength in
-          (cross, crossCount)
+inversionCount [] _         = ([], 0)
+inversionCount [x] _     = ([x], 0)
+inversionCount list length' =
+  let (left, left_count)   = inversionCount left_list left_length
+      (right, right_count) = inversionCount right_list right_length in
+    let (cross, cross_count, _) = merge left right (left_count + right_count) left_length in
+        (cross, cross_count)
   where
-    leftLength = len `div` 2
-    rightLength = len - leftLength
-    (leftList, rightList) = splitAt leftLength xs
+    left_length  = length' `div` 2
+    right_length = length' - left_length
+    (left_list, right_list) = splitAt left_length list
