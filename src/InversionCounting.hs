@@ -24,3 +24,29 @@ inversionCount list length' =
     left_length  = length' `div` 2
     right_length = length' - left_length
     (left_list, right_list) = splitAt left_length list
+
+
+-- Solution 2
+splitInHalf :: Ord a => [a] -> ([a], [a])
+splitInHalf xs = (take n xs, drop n xs)
+  where n = length xs `div` 2
+
+mergeandcount :: Ord a => [a] -> [a] -> ([a], Int)
+mergeandcount [] rs = (rs, 0)
+mergeandcount ls [] = (ls, 0)
+mergeandcount ls@(l:lst) rs@(r:rst) =
+  if l < r then let (ds, dc) = mergeandcount lst rs in (l:ds, dc)
+           else let (ds, dc) = mergeandcount ls rst in (r:ds, dc + length ls)
+
+sortandcount :: Ord a => [a] -> ([a], Int)
+sortandcount [] = ([], 0)
+sortandcount a@([_]) = (a, 0)
+sortandcount xs = (xs', lc + rc + xc)
+  where
+     (ls, rs) = splitInHalf xs
+     (ls', lc) = sortandcount ls
+     (rs', rc) = sortandcount rs
+     (xs', xc) = mergeandcount ls' rs'
+
+inversionCount2 :: Ord a => [a] -> Int
+inversionCount2 = snd . sortandcount
