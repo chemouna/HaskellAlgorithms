@@ -27,21 +27,35 @@ rabinKarp2 p text =
         if p == ""
                 then -1
         else
-                fromMaybe (-1) $ mapOnMaybe fst $ find matchingString $ zip [0..] $ scanl nextHash (hash2 text m) $ windowed (m+1) text
-        where n = length text
-              m = length p
+                fromMaybe (-1) $ mapOnMaybe fst findHashThatMatchesPattern
+        where m = length p
+              firstTextWindowHash = hash2 text m
+              textWindowPieces = windowed (m + 1) text -- windows of the text with the pattern size
               nextHash currentHash chars = reHash currentHash (head chars) (last chars) m
+              textHashes = scanl nextHash firstTextWindowHash textWindowPieces
+              textHashesWithIndexes = zip [0..] textHashes
+              findHashThatMatchesPattern = find matchingString textHashesWithIndexes
               matchingString (offset, textHash) = hash2 p m == textHash && p == subString text offset m
+
+-- the above can be written as in this way : i prefer the above and think its more readable
+-- rabinKarp2 :: String -> String -> Int
+-- rabinKarp2 text pattern =
+--         if pattern == "" then -1
+--         else fromMaybe (-1) $ mapOnMaybe fst $ find matchingString $ zip [0..] $ scanl nextHash (hash2 text m) $ windowed (m+1) text
+--         where n = length text
+--               m = length pattern
+--               nextHash currentHash chars = reHash currentHash (head chars) (last chars) m
+--               matchingString (offset, textHash) = hash2 pattern m == textHash && pattern == subString text offset m
 
 mapOnMaybe :: (a -> b) -> Maybe a -> Maybe b
 mapOnMaybe fn (Just x) = Just (fn x)
-mapOnMaybe _ (Nothing) = Nothing
+mapOnMaybe _ Nothing = Nothing
 
 subString text start end = take end $ drop start text
 
 windowed :: Int -> [a] -> [[a]]
-windowed size [] = []
-windowed size ls@(x:xs) = if length ls >= size then take size ls : windowed size xs else windowed size xs
+windowed _ [] = []
+windowed size ls@(_:xs) = if length ls >= size then take size ls : windowed size xs else windowed size xs
 
 globalQ = 1920475943
 globalR = 256
@@ -53,7 +67,7 @@ reHash = reHash' globalR globalQ
 reHash' r q existingHash firstChar nextChar m =
         (takeOffFirstChar `mod` fromIntegral q * fromIntegral r + ord nextChar) `mod` fromIntegral q
         where
-                rm = if m >0 then (fromIntegral r ^ fromIntegral (m-1)) `mod` fromIntegral q else 0
+                rm = if m > 0 then (fromIntegral r ^ fromIntegral (m-1)) `mod` fromIntegral q else 0
                 takeOffFirstChar = existingHash - fromIntegral rm * ord firstChar
 
 
