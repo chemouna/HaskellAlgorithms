@@ -33,7 +33,7 @@ rabinKarp2 p text =
               textWindowPieces = windowed (m + 1) text -- windows of the text with the pattern size
               nextHash currentHash chars = reHash currentHash (head chars) (last chars) m
               textHashes = scanl nextHash firstTextWindowHash textWindowPieces
-              textHashesWithIndexes = zip [0..] textHashes
+              textHashesWithIndexes = zip [0..] textHashes -- we need indexes because at the end if we find a match we return the index 
               findHashThatMatchesPattern = find matchingString textHashesWithIndexes
               matchingString (offset, textHash) = hash2 p m == textHash && p == subString text offset m
 
