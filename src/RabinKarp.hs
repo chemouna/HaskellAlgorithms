@@ -58,7 +58,7 @@ windowed _ [] = []
 windowed size ls@(_:xs) = if length ls >= size then take size ls : windowed size xs else windowed size xs
 
 globalQ = 1920475943
-globalR = 256
+globalR = 256 -- alphabet sizeP
 
 hash2 = hash' globalR globalQ
 hash' r q string m = foldl (\acc x -> (r * acc + ord x) `mod` q) 0 $ take m string
