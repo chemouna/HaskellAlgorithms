@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE OverloadedStrings #-}
 module LongestCommonSubsequence where
@@ -21,8 +22,8 @@ mString = M.list M.char
 lcsm = memoize lcs
 
 -- DP version
-lcs_dp' :: Ord a => [a] -> [a] -> Int -> Int -> Array (Int, Int) Int
-lcs_dp' s t m n =
+lcsDp' :: Ord a => [a] -> [a] -> Int -> Int -> Array (Int, Int) Int
+lcsDp' s t m n =
         a where
                 a = array ((0, 0), (m, n))
                         ([((0,j), 0) | j <- [0..n]] ++
@@ -33,5 +34,5 @@ lcs_dp' s t m n =
                                 else max (a!(i-1,j)) (a!(i, j-1)))
                                 | i <- [1..m], j <- [1..n]])
 
-lcs_dp :: Ord a => [a] -> [a] -> Array (Int, Int) Int
-lcs_dp s t = lcs_dp' s t (length s) (length t)
+lcsDp :: Ord a => [a] -> [a] -> Array (Int, Int) Int
+lcsDp s t = lcsDp' s t (length s) (length t)
