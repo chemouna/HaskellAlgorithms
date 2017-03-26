@@ -21,15 +21,17 @@ mString = M.list M.char
 lcsm = memoize lcs
 
 -- DP version
-lcs_dp :: [Char] -> [Char] -> Array (Int, Int) Int
-lcs_dp xs ys = a!(0,0) where
-  n = length xs
-  m = length ys
-  a = array ((0, 0), (n, m)) $ l1 ++ l2 ++ l3
-  l1 = [((i,0), 0) | i <- [0..n]]
-  l2 = [((0, j), 0) | j <- [0..m]]
-  l3 = [((i, j),
-        if (xs ! (i-1)) == (ys ! (j-1))
-        then (a ! (i-1, j-1)) + 1
-        else max (a ! (i - 1, j)) (a ! (i, j - 1)))
-        | i <- [1..m], j <- [1..n]]
+lcs_dp' :: Ord a => [a] -> [a] -> Int -> Int -> Array (Int, Int) Int
+lcs_dp' s t m n =
+        a where
+                a = array ((0, 0), (m, n))
+                        ([((0,j), 0) | j <- [0..n]] ++
+                         [((i,0), 0) | i <- [0..m]] ++
+                         [((i,j),
+                                if ((s !! (i-1)) == (t !! (j-1)))
+                                then (a!(i-1,j-1)) + 1
+                                else max (a!(i-1,j)) (a!(i, j-1)))
+                                | i <- [1..m], j <- [1..n]])
+
+lcs_dp :: Ord a => [a] -> [a] -> Array (Int, Int) Int
+lcs_dp s t = lcs_dp' s t (length s) (length t)
