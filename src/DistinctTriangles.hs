@@ -1,8 +1,7 @@
-
 module DistinctTriangles where
 
 {-
-Problem definition: https://www.codeeval.com/browse/188/ 
+Problem definition: https://www.codeeval.com/browse/188/
 -}
 
 import Test.Hspec
@@ -38,13 +37,14 @@ countTriangles xs
   where
     edge = head xs
     edges = tail xs
-    edgesSt = filter (\x -> (edge!!0 == x!!0)) edges
-    edgesEnd = filter (\x -> (edge!!1 == x!!0 || edge!!1 == x!!1)) edges
-    joins st = any (\en -> st!!1 == en!!0 || st!!1 == en!!1) edgesEnd
+    edgesSt = filter (\x -> (edge!!0 == x!!0)) edges -- get all edges that start with the first/source node
+    edgesEnd = filter (\x -> (edge!!1 == x!!0 || edge!!1 == x!!1)) edges -- all edges that start or end with the second/destination of edge
+    joins st = any (\en -> st!!1 == en!!0 || st!!1 == en!!1) edgesEnd -- find if in edgesEnd there's an edge where its destination or source node is the destination node of the edge (equivalent to find if there's an edge linked to the destination node of st)
+
 
 
 test = hspec $ do
-  describe "Distinct Trianges - " $ do 
+  describe "Distinct Trianges - " $ do
     it "countTriangles s0" $ do   countTriangles [[0, 2], [0, 1], [1, 2], [1, 3], [2, 3]] `shouldBe` 2
     it "countTriangles s1" $ do   countTriangles [[1, 3], [1, 8], [3, 8]] `shouldBe` 1
     it "countTriangles s2" $ do   countTriangles [[5, 6], [5, 7], [6, 7]] `shouldBe` 1
@@ -64,4 +64,3 @@ test = hspec $ do
     it "distinctTriangles s10" $ do   distinctTriangles "9 13;0 1,0 3,1 2,1 3,1 4,1 5,2 5,3 4,3 6,5 7,5 8,6 7,7 8" `shouldBe` 4
     it "distinctTriangles s11" $ do   distinctTriangles "9 3;5 6,5 7,6 7" `shouldBe` 1
     it "distinctTriangles s12" $ do   distinctTriangles "9 5;1 3,1 5,3 4,4 5,1 4" `shouldBe` 2
-
