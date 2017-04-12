@@ -11,7 +11,17 @@ distinctTriangles :: String -> Int
 distinctTriangles = undefined
 
 countTriangles :: [[Int]] -> Int
-countTriangles = undefined
+countTriangles xs
+  | length xs < 3 = 0
+  | otherwise = (length $ filter joins edgesSt) + countTriangles edges
+  where
+    edge = head xs
+    edges = tail xs
+    edgesSt = filter (\x -> (edge!!0 == x!!0)) edges 
+    edgesEnd = filter (\x -> (edge!!1 == x!!0 || edge!!1 == x!!1)) edges 
+    joins st = length (filter (\en -> st!!1 == en!!0 || st!!1 == en!!1) edgesEnd) > 0
+
+    
 
 
 test = hspec $ do
