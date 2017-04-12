@@ -8,15 +8,15 @@ Problem definition: https://www.codeeval.com/browse/188/
 import Test.Hspec
 import Data.List
 import Data.List.Split
+import Debug.Trace
 
-stringToIntArray::String->[Int]
+stringToIntArray::String -> [Int]
 stringToIntArray edge = sort $ map (\x-> read x::Int) $ splitOn " " edge
 
-distinct::[[Int]]->[Int]->[[Int]]
+distinct:: [[Int]] -> [Int] -> [[Int]]
 distinct uniqueEdges edge
   | any (\x-> edge!!0==x!!0 && edge!!1==x!!1) uniqueEdges  = uniqueEdges
-  | otherwise = uniqueEdges++[edge]
-
+  | otherwise = uniqueEdges ++ [edge]
 
 sortEdges :: [Int] -> [Int] -> Ordering
 sortEdges a b
@@ -26,8 +26,8 @@ sortEdges a b
   | a!!1 > b!!1 = GT
   | otherwise = EQ
 
-distinctTriangles::String->Int
-distinctTriangles line = countTriangles $ sortBy sortEdges $ foldl distinct  [] $  map stringToIntArray $ splitOn "," (args!!1)
+distinctTriangles :: String -> Int
+distinctTriangles line = countTriangles $ sortBy sortEdges $ foldl distinct [] $  map stringToIntArray $ splitOn "," (args!!1)
   where
     args = splitOn ";" line
 
