@@ -38,8 +38,9 @@ countTriangles xs
     edge = head xs
     edges = tail xs
     edgesStart = filter (\x -> (x!!0 == edge!!0)) edges -- get all edges that start with the first/source node
-    edgesEnd = filter (\x -> (x!!0 == edge!!1 || x!!1 == edge!!1)) edges -- all edges that start or end with the second/destination of edge
-    joins start = any (\end -> start!!1 == end!!0 || start!!1 == end!!1) edgesEnd -- find if in edgesEnd there's an edge where its destination or source node is the destination node of the edge (equivalent to find if there's an edge linked to the destination node of st)
+    edgesEnd = filter (\x -> (edge!!1) `elem` x) edges -- all edges that start or end with the second/destination of edge
+    joins start = any (\end -> (start!!1) `elem` end) edgesEnd -- find if in edgesEnd there's an edge where its destination
+    -- or source node is the destination node of the edge (equivalent to find if there's an edge linked to the destination node of st)
 
 -- TODO: convert the equal comparison to is equal to this or this 
 test = hspec $ do
