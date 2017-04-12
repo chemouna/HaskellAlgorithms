@@ -6,14 +6,35 @@ Problem definition: https://www.codeeval.com/browse/188/
 -}
 
 import Test.Hspec
+import Data.List
+import Data.List.Split
 
-distinctTriangles :: String -> Int
-distinctTriangles = undefined
+stringToIntArray::String->[Int]
+stringToIntArray edge = sort $ map (\x-> read x::Int) $ splitOn " " edge
+
+distinct::[[Int]]->[Int]->[[Int]]
+distinct uniqueEdges edge
+  | any (\x-> edge!!0==x!!0 && edge!!1==x!!1) uniqueEdges  = uniqueEdges
+  | otherwise = uniqueEdges++[edge]
+
+
+sortEdges :: [Int] -> [Int] -> Ordering
+sortEdges a b
+  | a!!0 < b!!0 = LT
+  | a!!0 > b!!0 = GT
+  | a!!1 < b!!1 = LT
+  | a!!1 > b!!1 = GT
+  | otherwise = EQ
+
+distinctTriangles::String->Int
+distinctTriangles line = countTriangles $ sortBy sortEdges $ foldl distinct  [] $  map stringToIntArray $ splitOn "," (args!!1)
+  where
+    args = splitOn ";" line
 
 countTriangles :: [[Int]] -> Int
 countTriangles xs
   | length xs < 3 = 0
-  | otherwise = (length $ filter joins edgesSt) + countTriangles edges
+  | otherwise = length (filter joins edgesSt) + countTriangles edges
   where
     edge = head xs
     edges = tail xs
@@ -21,7 +42,6 @@ countTriangles xs
     edgesEnd = filter (\x -> (edge!!1 == x!!0 || edge!!1 == x!!1)) edges 
     joins st = length (filter (\en -> st!!1 == en!!0 || st!!1 == en!!1) edgesEnd) > 0
 
-    
 
 
 test = hspec $ do
