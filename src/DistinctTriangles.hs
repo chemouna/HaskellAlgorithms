@@ -38,10 +38,9 @@ countTriangles xs
   where
     edge = head xs
     edges = tail xs
-    edgesSt = filter (\x -> (edge!!0 == x!!0)) edges 
-    edgesEnd = filter (\x -> (edge!!1 == x!!0 || edge!!1 == x!!1)) edges 
-    joins st = length (filter (\en -> st!!1 == en!!0 || st!!1 == en!!1) edgesEnd) > 0
-
+    edgesSt = filter (\x -> (edge!!0 == x!!0)) edges
+    edgesEnd = filter (\x -> (edge!!1 == x!!0 || edge!!1 == x!!1)) edges
+    joins st = any (\en -> st!!1 == en!!0 || st!!1 == en!!1) edgesEnd
 
 
 test = hspec $ do
