@@ -7,14 +7,13 @@ Problem definition: https://www.codeeval.com/browse/188/
 import Test.Hspec
 import Data.List
 import Data.List.Split
-import Debug.Trace
 
 stringToIntArray::String -> [Int]
 stringToIntArray edge = sort $ map (\x-> read x::Int) $ splitOn " " edge
 
 distinct:: [[Int]] -> [Int] -> [[Int]]
 distinct uniqueEdges edge
-  | any (\x-> edge!!0==x!!0 && edge!!1==x!!1) uniqueEdges  = uniqueEdges
+  | edge `elem` uniqueEdges = uniqueEdges
   | otherwise = uniqueEdges ++ [edge]
 
 sortEdges :: [Int] -> [Int] -> Ordering
@@ -33,16 +32,16 @@ distinctTriangles line = countTriangles $ sortBy sortEdges $ foldl distinct [] $
 countTriangles :: [[Int]] -> Int
 countTriangles xs
   | length xs < 3 = 0
-  | otherwise = length (filter joins edgesStart) + countTriangles edges
+  | otherwise = length (filter joins edgesStart) + countTriangles edges -- count triangles recursively for each edge
   where
     edge = head xs
     edges = tail xs
-    edgesStart = filter (\x -> (x!!0 == edge!!0)) edges -- get all edges that start with the first/source node
-    edgesEnd = filter (\x -> (edge!!1) `elem` x) edges -- all edges that start or end with the second/destination of edge
-    joins start = any (\end -> (start!!1) `elem` end) edgesEnd -- find if in edgesEnd there's an edge where its destination
+    edgesStart = filter (\x -> (head x == head edge)) edges -- get all edges that start with the first/source node
+    edgesEnd = filter ((edge!!1) `elem`) edges -- all edges that start or end with the second/destination of edge
+    joins start = any (start!!1 `elem`) edgesEnd -- find if in edgesEnd there's an edge where its destination
     -- or source node is the destination node of the edge (equivalent to find if there's an edge linked to the destination node of st)
 
--- TODO: convert the equal comparison to is equal to this or this 
+
 test = hspec $ do
   describe "Distinct Trianges - " $ do
     it "countTriangles s0" $ do   countTriangles [[0, 2], [0, 1], [1, 2], [1, 3], [2, 3]] `shouldBe` 2
