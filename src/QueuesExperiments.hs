@@ -15,3 +15,4 @@ instance Queue Queue0 where
   head (Q0 (x:_)) = x  -- because haskell is lazy the snoc operation is a thunk and the concatenation happens only when call head so the complexity of head is O(n)
   tail (Q0 (_:xs)) = Q0 xs
   snoc (Q0 xs) x = Q0 (xs ++ [x])
+
