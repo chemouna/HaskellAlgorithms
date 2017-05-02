@@ -19,10 +19,17 @@ findCycle x0 f = (k, n) where
 f k m n | n < k = n + 1
         | otherwise = (n + 1 - k) `mod` m + k
 
+findCycle' x0 f = (length sec, length cycle) where
+  xs@(x:xs') = iterate f x0
+  ys@(y:ys') = iterate (f.f) x0
+  converge = fst $ unzip $ dropWhile neq (zip xs' ys')
+  (sec, (z:zs)) = span neq (zip xs converge)
+  cycle = z : takeWhile (z /=) zs
+
+neq (x, y) = x /= y
+
 prop_cycle fcycle b c = (k, m) == fcycle 0 (f k m) where
   (k, m) = ((abs b) `mod` 1000, max 1 (abs c) `mod` 1000)   -- limit to 1000 to save the time
 
 prop_floyd :: Int -> Int -> Bool
 prop_floyd = prop_cycle findCycle
-
-
