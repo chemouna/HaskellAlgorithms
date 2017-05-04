@@ -24,6 +24,7 @@ library
                      , data-memocombinators
                      , hspec >= 2.2.3
                      , mtl
+                     , random >= 1.1
                      , split
                      , utility-ht
                      
@@ -40,6 +41,7 @@ executable HaskellAlgorithms-exe
                      , base
                      , containers >= 0.5.6.2
                      , hspec >= 2.2.3
+                     , random >= 1.1
                      , split
   default-language:    Haskell2010
 
@@ -55,6 +57,7 @@ test-suite HaskellAlgorithms-test
                      , containers >= 0.5.6.2
                      , hspec >= 2.2.3
                      , hspec >= 2.2.3
+                     , random >= 1.1
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
