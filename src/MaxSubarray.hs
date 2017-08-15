@@ -43,3 +43,4 @@ main = hspec $ do
       property $ forAll (listOf $ arbitrary `suchThat` (< 0)) $ \xs ->
         (kadane xs ^. _1) `shouldBe` 0
 
+
