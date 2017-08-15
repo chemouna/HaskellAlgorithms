@@ -1,5 +1,10 @@
 module MaxSubarray where
 
+import Control.Lens
+import Test.Hspec
+import Test.QuickCheck
+
+
 kadane :: [Integer] -> (Integer, Int, Int)
 kadane xs = kadaneHelper xs 0 0 0 0 0 0
   where kadaneHelper [] maxSum _ _ fStart fEnd _ = (maxSum, fStart, fEnd)
@@ -19,3 +24,22 @@ kadane2 xs = kadaneHelper2 xs 0 0 0 0 0 0
             else
                  if (currSum + y < 0) then kadaneHelper2 ys maxSum (maxEnd + 1) (maxEnd + 1) fStart fEnd 0
                  else kadaneHelper2 ys maxSum maxStart maxEnd fStart fEnd (currSum + y)
+
+
+
+main = hspec $ do
+  describe "kadane" $ do
+    it "should work for the empty list" $
+      (kadane [] ^. _1) `shouldBe` 0
+    
+    it "should work for the example" $
+      (kadane [-2, 1, -3, 4, -1, 2, 1, -5, 4] ^. _1) `shouldBe` 6
+
+    it "should return the sum for all positive lists" $
+      property $ forAll (listOf $ arbitrary `suchThat` (>= 0)) $ \xs ->
+        (kadane xs ^. _1) `shouldBe` sum xs
+
+    it "should return zero for negative lists" $
+      property $ forAll (listOf $ arbitrary `suchThat` (< 0)) $ \xs ->
+        (kadane xs ^. _1) `shouldBe` 0
+
