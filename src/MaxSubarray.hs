@@ -40,6 +40,26 @@ kadane xs = helper xs 0 0 0 0
           | otherwise = trace "3" helper ys maxSum maxStart maxEnd (currSum + y)
           where e = min (length xs - 1) (maxEnd + 1)
 
+
+main = hspec $ do
+  describe "kadane" $ do
+    it "should work for the empty list" $
+      kadane [] `shouldBe` (0, 0, 0)
+
+    it "should work for the example" $
+      (kadane [-2, 1, -3, 4, -1, 2, 1, -5, 4]) `shouldBe` (6, 3, 6)
+
+    it "should work for the example [-2, 1] " $
+      (kadane [-2, 1]) `shouldBe` (1, 1, 1)
+
+    it "should return zero for negative lists" $
+      property $ forAll (listOf $ arbitrary `suchThat` (< 0)) $ \xs ->
+        kadane xs `shouldBe` (0,0,0)
+
+    it "should return the sum for all positive lists" $
+      property $ forAll (listOf $ arbitrary `suchThat` (>= 0)) $ \xs ->
+        kadane xs `shouldBe` (sum xs, 0, max 0 (length xs - 1))
+
 --
 
 data Range a = Range !a !Int !Int deriving (Eq)
@@ -76,22 +96,3 @@ prop_correctRange xs = not (null xs) ==> sum sublist == val
         sublist = take (end - start + 1) (drop start xs)
 
 --
-
-main = hspec $ do
-  describe "kadane" $ do
-    it "should work for the empty list" $
-      kadane [] `shouldBe` (0, 0, 0)
-
-    it "should work for the example" $
-      (kadane [-2, 1, -3, 4, -1, 2, 1, -5, 4]) `shouldBe` (6, 3, 6)
-
-    it "should work for the example [-2, 1] " $
-      (kadane [-2, 1]) `shouldBe` (1, 1, 1)
-
-    it "should return zero for negative lists" $
-      property $ forAll (listOf $ arbitrary `suchThat` (< 0)) $ \xs ->
-        kadane xs `shouldBe` (0,0,0)
-
-    it "should return the sum for all positive lists" $
-      property $ forAll (listOf $ arbitrary `suchThat` (>= 0)) $ \xs ->
-        kadane xs `shouldBe` (sum xs, 0, max 0 (length xs - 1))

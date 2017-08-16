@@ -29,7 +29,8 @@ library
                      , split
                      , utility-ht
                      , lens
-                     
+                     , haskell-docs
+
   default-language:    Haskell2010
 
 executable HaskellAlgorithms-exe
