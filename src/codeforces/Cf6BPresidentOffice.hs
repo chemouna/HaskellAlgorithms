@@ -3,6 +3,7 @@ module Cf6BPresidentOffice where
 import Data.List
 import Control.Monad
 import Data.Ord
+import Data.Maybe
 
 {--
 i need to count adjacencies left and right of his color
@@ -12,18 +13,29 @@ shld be instead adjacencies of all matches of its color and take max
 
 -}
 
-solve :: String -> [String] -> ([Integer], String)
-solve s m = (vs, c)
+solve :: String -> [String] -> Int
+solve s m = length $ filter (\x -> (x /= '.') && (x /= c)) $ map (\(x, y) -> (m !! x) !! y) is 
   where
+    -- TODO: handle boundaries
+    is = [ ((fst ip) - 1, snd ip), (fst ip, (snd ip) - 1), ((fst ip) + 1, snd ip), (fst ip, (snd ip) + 1) ]
+    ip = indexPresident m c 
     vs =  map (\x -> read x :: Integer) (init l)
-    c = last l
+    c = head (last l)
     l = words s
 
 -- ["G.B.",".RR.","TTT."]
 -- lets for now get just the furthest index and if that doest work get all and find max
 
-findMaxIndexList :: String -> Char -> Int
-findMaxIndexList s v = snd $ last $ filter (\(x,y) -> x == v) (zip s [0..])
+indexPresident :: [String] -> Char -> (Int, Int)
+indexPresident m c = head $ map (\(x, y) -> (y, fromJust x))
+  $ filter (\(x, y) -> isJust x) (map (\(x, y) -> (findMaxIndexList x c, y)) (zip m [0..]))
+
+
+findMaxIndexList :: String -> Char -> Maybe Int
+findMaxIndexList s v = if null l then Nothing
+  else Just (snd (last l))
+  where
+    l = filter (\(x,y) -> x == v) (zip s [0..])
 
 main :: IO ()
 main = do
