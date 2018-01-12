@@ -6,31 +6,31 @@ import Data.Ord
 import Data.Maybe
 
 solve :: String -> [String] -> Int -- [(Int, Int)] -- Int
-solve s mat = length $ filter (\x -> (x /= '.') && (x /= c)) $ map (\(x, y) -> (mat !! x) !! y) is
+solve s mat = maximum $ map total is
   where
-    is = [
-            (max ((fst ip) - 1) 0, min (snd ip) (m - 1)),
-            (min (fst ip) (n - 1), max ((snd ip) - 1) 0),
-            (min ((fst ip) + 1) (n - 1), min (snd ip) (m - 1)),
-            (min (fst ip) (n - 1), min ((snd ip) + 1) (m - 1))
-         ]
-    ip = indexPresident mat c
+    total xs = length $ filter (\x -> (x /= '.') && (x /= c)) $ map (\(x, y) -> (mat !! x) !! y) xs
+    is = map (\(a,b) -> 
+                 [ (max (a - 1) 0, min b (m - 1)),
+                   (min a (n - 1), max (b - 1) 0),
+                   (min (a + 1) (n - 1), min b (m - 1)),
+                   (min a (n - 1), min (b + 1) (m - 1)) ]) ip
+
+    ip = indicesPresident mat c
     vs = map (\x -> read x :: Integer) (init l)
     c = head (last l)
     n = read (head l) :: Int
     m = read (l !! 1) :: Int
     l = words s
 
-indexPresident :: [String] -> Char -> (Int, Int)
-indexPresident m c = head $ map (\(x, y) -> (y, fromJust x))
-  $ filter (\(x, y) -> isJust x) (map (\(x, y) -> (findMaxIndexList x c, y)) (zip m [0..]))
 
-
-findMaxIndexList :: String -> Char -> Maybe Int
-findMaxIndexList s v = if null l then Nothing
-  else Just (snd (last l))
+indicesPresident :: [String] -> Char -> [(Int, Int)]
+indicesPresident m c = concatMap (\(x, ys) -> map (\v -> (x, v)) ys) xys
   where
-    l = filter (\(x,y) -> x == v) (zip s [0..])
+    xys = filter (\(x, y) -> length y > 0) $  map (\(x, y) -> (y, findIndexList x c)) (zip m [0..])
+
+-- cant just go for the max need to check all of them
+findIndexList :: String -> Char -> [Int]
+findIndexList s v = map snd $ filter (\(x,y) -> x == v) (zip s [0..])
 
 main :: IO ()
 main = do
