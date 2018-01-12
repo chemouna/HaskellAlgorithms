@@ -5,26 +5,21 @@ import Control.Monad
 import Data.Ord
 import Data.Maybe
 
-{--
-i need to count adjacencies left and right of his color
-so first i need to locate the president color
-
-shld be instead adjacencies of all matches of its color and take max
-
--}
-
-solve :: String -> [String] -> Int
-solve s m = length $ filter (\x -> (x /= '.') && (x /= c)) $ map (\(x, y) -> (m !! x) !! y) is 
+solve :: String -> [String] -> Int -- [(Int, Int)] -- Int
+solve s mat = length $ filter (\x -> (x /= '.') && (x /= c)) $ map (\(x, y) -> (mat !! x) !! y) is
   where
-    -- TODO: handle boundaries
-    is = [ ((fst ip) - 1, snd ip), (fst ip, (snd ip) - 1), ((fst ip) + 1, snd ip), (fst ip, (snd ip) + 1) ]
-    ip = indexPresident m c 
-    vs =  map (\x -> read x :: Integer) (init l)
+    is = [
+            (max ((fst ip) - 1) 0, min (snd ip) (m - 1)),
+            (min (fst ip) (n - 1), max ((snd ip) - 1) 0),
+            (min ((fst ip) + 1) (n - 1), min (snd ip) (m - 1)),
+            (min (fst ip) (n - 1), min ((snd ip) + 1) (m - 1))
+         ]
+    ip = indexPresident mat c
+    vs = map (\x -> read x :: Integer) (init l)
     c = head (last l)
+    n = read (head l) :: Int
+    m = read (l !! 1) :: Int
     l = words s
-
--- ["G.B.",".RR.","TTT."]
--- lets for now get just the furthest index and if that doest work get all and find max
 
 indexPresident :: [String] -> Char -> (Int, Int)
 indexPresident m c = head $ map (\(x, y) -> (y, fromJust x))
@@ -40,13 +35,6 @@ findMaxIndexList s v = if null l then Nothing
 main :: IO ()
 main = do
   input <- getLine
-  inputs <- replicateM 3 getLine
+  inputs <- replicateM (read (head (words input)) :: Int) getLine
   print $ solve input inputs
 
-  -- solve
-
-  -- s <- getLine
-  -- l <- words s
-  --vs <- map (\x -> read x :: Integer) (init l)
-  -- c <- last l
-  -- putStrLn $  "test" -- l
