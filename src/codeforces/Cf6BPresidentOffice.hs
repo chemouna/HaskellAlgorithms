@@ -9,7 +9,7 @@ solve :: String -> [String] -> Int -- [(Int, Int)] -- Int
 solve s mat = maximum $ map total is
   where
     total xs = length $ filter (\x -> (x /= '.') && (x /= c)) $ map (\(x, y) -> (mat !! x) !! y) xs
-    is = map (\(a,b) -> 
+    is = map (\(a,b) ->
                  [ (max (a - 1) 0, min b (m - 1)),
                    (min a (n - 1), max (b - 1) 0),
                    (min (a + 1) (n - 1), min b (m - 1)),
@@ -26,11 +26,10 @@ solve s mat = maximum $ map total is
 indicesPresident :: [String] -> Char -> [(Int, Int)]
 indicesPresident m c = concatMap (\(x, ys) -> map (\v -> (x, v)) ys) xys
   where
-    xys = filter (\(x, y) -> length y > 0) $  map (\(x, y) -> (y, findIndexList x c)) (zip m [0..])
+    xys = filter ((> 0).length.snd) $  map (\(x, y) -> (y, findIndexList x c)) (zip m [0..])
 
--- cant just go for the max need to check all of them
 findIndexList :: String -> Char -> [Int]
-findIndexList s v = map snd $ filter (\(x,y) -> x == v) (zip s [0..])
+findIndexList s v = map snd $ filter ((== v).fst) (zip s [0..])
 
 main :: IO ()
 main = do
