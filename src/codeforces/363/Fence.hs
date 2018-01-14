@@ -13,4 +13,6 @@ solve k xs = snd . minimum $ flip zip [1..] sumsOfEachKElements
      pairWithAndWithoutK = (drop k &&& id) progressivSums
      progressivSums = scanl (+) 0 xs
 
-
+-- one line solution 
+solve' :: Int -> [Int] -> Int
+solve' k = snd . minimum . flip zip [1..] . uncurry (zipWith (-)) . (drop k &&& id) . scanl (+) 0
