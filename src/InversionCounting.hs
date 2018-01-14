@@ -1,3 +1,4 @@
+
 module InversionCounting where
 
 merge :: [Int] -> [Int] -> Int -> Int -> ([Int], Int, Int)

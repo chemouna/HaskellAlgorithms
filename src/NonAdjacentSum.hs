@@ -1,4 +1,5 @@
 
+
 module NonAdjacentSum where
 
 -- recursive repetitve solution (slow as it does a lot of calculations mutliple times)
