@@ -3,6 +3,8 @@ module SummerSellOff where
 import qualified Data.ByteString.Char8 as B
 import Data.Maybe
 import Data.List
+import Data.Functor
+
 
 getInts :: IO [Int]
 getInts = map (fst . fromJust . B.readInt) <$> B.words <$> B.getContents
@@ -22,3 +24,4 @@ main :: IO ()
 main = do
   _:f:xs <- getInts
   print $ solve f (parsePairs xs)
+
