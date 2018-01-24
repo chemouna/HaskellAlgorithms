@@ -15,6 +15,8 @@ bbox (x:xs) = bbx x xs where
   bbx a [] = a
   bbx (a,b,c,d) ((a1,b1,c1,d1):xs) = bbx (min a a1, min b b1, max c c1, max d d1) xs
 
+-- If the two rectangles don't intersect, then the bottom left corner will not be to the bottom left side of the top right corner, i.e. either the x-coordinate or y-coordinate will be as high or higher than the x-coordinate or y-coordinate of the top right corner.
+
 clip _ [] = []
 clip bb ((x1,y1,x2,y2):rs)
     | a1 == a2 || b1 == b2 = []
